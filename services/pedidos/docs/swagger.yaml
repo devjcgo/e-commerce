@@ -1,0 +1,140 @@
+basePath: /
+definitions:
+  application.ItensInput:
+    properties:
+      nome:
+        type: string
+      preco:
+        type: number
+      produto_id:
+        type: string
+      quantidade:
+        type: integer
+    type: object
+  domain.Item:
+    properties:
+      id:
+        type: string
+      nome:
+        type: string
+      preco:
+        format: float64
+        type: number
+      produtoID:
+        type: string
+      quantidade:
+        type: integer
+    type: object
+  domain.Pedido:
+    properties:
+      atualizadoEm:
+        type: string
+      clienteID:
+        type: string
+      criadoEm:
+        type: string
+      id:
+        type: string
+      itens:
+        items:
+          $ref: '#/definitions/domain.Item'
+        type: array
+      status:
+        $ref: '#/definitions/domain.Status'
+      total:
+        format: float64
+        type: number
+    type: object
+  domain.Status:
+    enum:
+    - aguardando_pagamento
+    - pago
+    - enviado
+    - cancelado
+    type: string
+    x-enum-varnames:
+    - StatusAguardandoPagamento
+    - StatusPago
+    - StatusEnviado
+    - StatusCancelado
+  http.createRequestBody:
+    properties:
+      cliente_id:
+        type: string
+      itens:
+        items:
+          $ref: '#/definitions/application.ItensInput'
+        type: array
+    type: object
+info:
+  contact:
+    email: juan@juan.io
+    name: Juan
+    url: http://www.ulr.com/juan
+  description: Este é o microsserviço responsável pelo gerenciamento de pedidos.
+  termsOfService: http://swagger.io/terms/
+  title: API de Pedidos do E-commerce
+  version: "1.0"
+paths:
+  /pedidos:
+    post:
+      consumes:
+      - application/json
+      description: Cria um novo pedido com base nos dados do cliente e itens fornecidos.
+      parameters:
+      - description: Dados para criação do pedido
+        in: body
+        name: pedido
+        required: true
+        schema:
+          $ref: '#/definitions/http.createRequestBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Pedido'
+        "400":
+          description: Corpo da requisição inválido
+          schema:
+            type: string
+        "500":
+          description: Erro interno ao criar pedido
+          schema:
+            type: string
+      summary: Cria um novo pedido
+      tags:
+      - pedidos
+  /pedidos/{id}:
+    get:
+      description: Retorna os detalhes de um pedido específico com base no seu UUID.
+      parameters:
+      - description: ID do Pedido (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Pedido'
+        "400":
+          description: O ID do pedido é obrigatório
+          schema:
+            type: string
+        "404":
+          description: Pedido não encontrado
+          schema:
+            type: string
+        "500":
+          description: Erro interno ao buscar pedido
+          schema:
+            type: string
+      summary: Busca um pedido por ID
+      tags:
+      - pedidos
+swagger: "2.0"
