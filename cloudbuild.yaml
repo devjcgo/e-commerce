@@ -1,0 +1,36 @@
+steps:
+  # --- PASSO 1: Construir a Imagem Docker ---
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build Pedidos Service'
+    args:
+      - 'build'
+      - '-t'
+      # ESTA LINHA É O ENDEREÇO COMPLETO DA SUA IMAGEM DENTRO DO ARTIFACT REGISTRY.
+      # Veja como ela é formada: REGION-docker.pkg.dev/PROJECT_ID/NOME_DO_REPO/NOME_DA_IMAGEM:TAG
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA'
+      - '--build-arg=SERVICE_PATH=services/pedidos'
+      - '--build-arg=MAIN_FILE_PATH=services/pedidos/cmd/api'
+      - '.'
+
+  # --- PASSO 2: Enviar a Imagem para o Artifact Registry ---
+  # O comando 'push' envia a imagem construída para o endereço que definimos acima.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push Pedidos Service'
+    args: ['push', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA']
+
+  # --- PASSO 3: Fazer o Deploy da Imagem que está no Artifact Registry para o Cloud Run ---
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy Pedidos Service'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'pedidos-service'
+      # O Cloud Run busca a imagem exatamente neste endereço do Artifact Registry.
+      - '--image=southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA'
+      - '--region=southamerica-east1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+
+images:
+  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA'

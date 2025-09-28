@@ -10,14 +10,11 @@ import (
 
 // NewConnection cria e retorna uma nova conexão com o banco de dados PostgreSQL.
 func NewConnection() (*sql.DB, error) {
-	host := getEnv("DB_HOST", "34.70.240.93")
-	port := getEnv("DB_PORT", "5432")
-	user := getEnv("DB_USER", "postgres")
-	pass := getEnv("DB_PASSWORD", "@K953zhok")
-	dbname := getEnv("DB_NAME", "pedidos")
-
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, pass, dbname)
+	// Pega a string de conexão da variável de ambiente injetada pelo Cloud Run.
+	dsn, ok := os.LookupEnv("DATABASE_URL")
+	if !ok {
+		return nil, fmt.Errorf("a variável de ambiente DATABASE_URL não foi definida")
+	}
 
 	db, err := sql.Open("pgx", dsn)
 	if err != nil {
@@ -30,11 +27,4 @@ func NewConnection() (*sql.DB, error) {
 
 	fmt.Println("Conexão com o banco de dados estabelecida com sucesso!")
 	return db, nil
-}
-
-func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
 }
