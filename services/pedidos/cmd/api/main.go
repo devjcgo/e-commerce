@@ -20,7 +20,6 @@ import (
 // @title API de Pedidos do E-commerce
 // @version 1.0
 // @description Este é o microsserviço responsável pelo gerenciamento de pedidos.
-// @host localhost:8080
 // @BasePath /
 func main() {
 	// 1. Inicializa a Conexão com o Banco de Dados
