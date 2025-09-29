@@ -39,28 +39,23 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	// Rota para a API
+	// Rotas da API
 	r.Post("/pedidos", pedidoHandler.CriarPedidoHandler)
 	r.Get("/pedidos/{id}", pedidoHandler.BuscarPedidoPorIDHandler)
 
-	// Rota para a documentação do Swagger
-	r.Get("/swagger/*", httpSwagger.Handler(
-		httpSwagger.URL("http://localhost:8080/swagger/doc.json"),
-	))
+	// Rota para a documentação do Swagger (AGORA CORRIGIDA)
+	r.Get("/swagger/*", httpSwagger.Handler())
 
 	// 4. Inicia o servidor
 	port := os.Getenv("PORT")
 	if port == "" {
-		// Se não estiver no Cloud Run, usa 8080 como padrão para rodar localmente.
 		port = "8080"
 	}
 
-	// Monta o endereço de escuta, ex: ":8080"
 	addr := fmt.Sprintf(":%s", port)
 
 	fmt.Printf("Servidor de Pedidos rodando na porta %s...\n", port)
 	fmt.Printf("Acesse a documentação da API em http://localhost:%s/swagger/index.html\n", port)
 
-	// Usa a variável 'addr' para iniciar o servidor.
 	log.Fatal(http.ListenAndServe(addr, r))
 }
