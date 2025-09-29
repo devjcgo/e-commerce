@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	_ "ecommerce/pedidos/docs" // Importa os docs gerados pelo swag (necessário)
 
@@ -49,7 +50,18 @@ func main() {
 	))
 
 	// 4. Inicia o servidor
-	fmt.Println("Servidor de Pedidos rodando na porta 8080...")
-	fmt.Println("Acesse a documentação da API em http://localhost:8080/swagger/index.html")
-	http.ListenAndServe(":8080", r)
+	port := os.Getenv("PORT")
+	if port == "" {
+		// Se não estiver no Cloud Run, usa 8080 como padrão para rodar localmente.
+		port = "8080"
+	}
+
+	// Monta o endereço de escuta, ex: ":8080"
+	addr := fmt.Sprintf(":%s", port)
+
+	fmt.Printf("Servidor de Pedidos rodando na porta %s...\n", port)
+	fmt.Printf("Acesse a documentação da API em http://localhost:%s/swagger/index.html\n", port)
+
+	// Usa a variável 'addr' para iniciar o servidor.
+	log.Fatal(http.ListenAndServe(addr, r))
 }
