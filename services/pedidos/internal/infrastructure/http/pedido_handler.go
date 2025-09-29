@@ -34,7 +34,7 @@ type createRequestBody struct {
 // @Accept json
 // @Produce json
 // @Param pedido body createRequestBody true "Dados para criação do pedido"
-// @Success 201 {object} domain.Pedido
+// @Success 201
 // @Failure 400 {string} string "Corpo da requisição inválido"
 // @Failure 500 {string} string "Erro interno ao criar pedido"
 // @Router /pedidos [post]
@@ -45,7 +45,7 @@ func (h *PedidoHandler) CriarPedidoHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	pedido, err := h.service.CriarPedido(r.Context(), body.ClienteID, body.Itens)
+	_, err := h.service.CriarPedido(r.Context(), body.ClienteID, body.Itens)
 	if err != nil {
 		http.Error(w, "Erro ao criar pedido: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -53,7 +53,7 @@ func (h *PedidoHandler) CriarPedidoHandler(w http.ResponseWriter, r *http.Reques
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated) // Status 201 Created
-	json.NewEncoder(w).Encode(pedido)
+	json.NewEncoder(w)
 }
 
 // @Summary Busca um pedido por ID
@@ -90,4 +90,31 @@ func (h *PedidoHandler) BuscarPedidoPorIDHandler(w http.ResponseWriter, r *http.
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK) // Status 200 OK
 	json.NewEncoder(w).Encode(pedido)
+}
+
+// @Summary Lista todos pedidos
+// @Description Retorna pedidos e seus itens.
+// @Tags pedidos
+// @Produce json
+// @Success 200 {object} []domain.Pedido
+// @Failure 404 {string} string "Sem pedidos na base"
+// @Failure 500 {string} string "Erro interno ao listar pedidos"
+// @Router /pedidos [get]
+func (h *PedidoHandler) ListarTodosPedidos(w http.ResponseWriter, r *http.Request) {
+
+	pedidos, err := h.service.ListarPedidos(r.Context())
+	if err != nil {
+
+		// Se o erro for 'sql.ErrNoRows', significa que não encontramos o pedido.
+		if errors.Is(err, sql.ErrNoRows) {
+			http.Error(w, "Sem pedidos na base", http.StatusNotFound)
+			return
+		}
+
+		http.Error(w, "Erro ao listar pedidos "+err.Error(), http.StatusBadRequest)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK) // Status 200 OK
+	json.NewEncoder(w).Encode(pedidos)
 }

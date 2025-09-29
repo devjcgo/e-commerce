@@ -28,7 +28,7 @@ type Item struct {
 type Pedido struct {
 	ID           string
 	ClienteID    string
-	Itens        []Item
+	Itens        []*Item
 	Status       Status
 	Total        float64
 	CriadoEm     time.Time
@@ -37,7 +37,7 @@ type Pedido struct {
 
 // NewPedido é o construtor do nosso agregado.
 // Ele garante que o pedido seja criado de forma consistente.
-func NewPedido(clienteID string, itens []Item) (*Pedido, error) {
+func NewPedido(clienteID string, itens []*Item) (*Pedido, error) {
 	if len(itens) == 0 {
 		return nil, ErrItemInvalido
 	}

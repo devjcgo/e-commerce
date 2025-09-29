@@ -67,16 +67,34 @@ definitions:
         type: array
     type: object
 info:
-  contact:
-    email: juan@juan.io
-    name: Juan
-    url: http://www.ulr.com/juan
+  contact: {}
   description: Este é o microsserviço responsável pelo gerenciamento de pedidos.
-  termsOfService: http://swagger.io/terms/
   title: API de Pedidos do E-commerce
   version: "1.0"
 paths:
   /pedidos:
+    get:
+      description: Retorna pedidos e seus itens.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Pedido'
+            type: array
+        "404":
+          description: Sem pedidos na base
+          schema:
+            type: string
+        "500":
+          description: Erro interno ao listar pedidos
+          schema:
+            type: string
+      summary: Lista todos pedidos
+      tags:
+      - pedidos
     post:
       consumes:
       - application/json
@@ -93,8 +111,6 @@ paths:
       responses:
         "201":
           description: Created
-          schema:
-            $ref: '#/definitions/domain.Pedido'
         "400":
           description: Corpo da requisição inválido
           schema:

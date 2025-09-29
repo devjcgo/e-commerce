@@ -27,9 +27,9 @@ type ItensInput struct {
 
 // CriarPedido é o caso de uso para criar um novo pedido.
 func (s *PedidoService) CriarPedido(ctx context.Context, clienteID string, itensInput []ItensInput) (*domain.Pedido, error) {
-	var itensDominio []domain.Item
+	var itensDominio []*domain.Item
 	for _, itemInput := range itensInput {
-		itensDominio = append(itensDominio, domain.Item{
+		itensDominio = append(itensDominio, &domain.Item{
 			ProdutoID:  itemInput.ProdutoID,
 			Nome:       itemInput.Nome,
 			Preco:      itemInput.Preco,
@@ -52,4 +52,8 @@ func (s *PedidoService) CriarPedido(ctx context.Context, clienteID string, itens
 
 func (s *PedidoService) BuscarPedidoPorID(ctx context.Context, id string) (*domain.Pedido, error) {
 	return s.repo.FindByID(ctx, id)
+}
+
+func (s *PedidoService) ListarPedidos(ctx context.Context) ([]*domain.Pedido, error) {
+	return s.repo.ListAll(ctx)
 }

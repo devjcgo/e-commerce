@@ -9,18 +9,46 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "Juan",
-            "url": "http://www.ulr.com/juan",
-            "email": "juan@juan.io"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
         "/pedidos": {
+            "get": {
+                "description": "Retorna pedidos e seus itens.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pedidos"
+                ],
+                "summary": "Lista todos pedidos",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Pedido"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sem pedidos na base",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno ao listar pedidos",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Cria um novo pedido com base nos dados do cliente e itens fornecidos.",
                 "consumes": [
@@ -46,10 +74,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Pedido"
-                        }
+                        "description": "Created"
                     },
                     "400": {
                         "description": "Corpo da requisição inválido",

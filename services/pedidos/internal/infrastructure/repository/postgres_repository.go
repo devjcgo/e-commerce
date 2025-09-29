@@ -70,7 +70,7 @@ func (r *postgresPedidoRepository) FindByID(ctx context.Context, id string) (*do
 	var pedido *domain.Pedido
 	for rows.Next() {
 		var itemID sql.NullInt64
-		var item domain.Item
+		var item *domain.Item
 
 		if pedido == nil {
 			pedido = &domain.Pedido{}
@@ -105,4 +105,80 @@ func (r *postgresPedidoRepository) FindByID(ctx context.Context, id string) (*do
 	}
 
 	return pedido, nil
+}
+
+func (r *postgresPedidoRepository) ListAll(ctx context.Context) ([]*domain.Pedido, error) {
+	// 1. A QUERY: Busca todos os dados de uma vez, ordenando pelos pedidos
+	// para garantir que as linhas do mesmo pedido venham em sequência.
+	const query = `
+		SELECT
+			p.id, p.cliente_id, p.status, p.total, p.criado_em, p.atualizado_em,
+			i.id, i.produto_id, i.nome_produto, i.preco, i.quantidade
+		FROM pedidos p
+		LEFT JOIN pedido_itens i ON p.id = i.pedido_id
+		ORDER BY p.criado_em DESC, p.id` // Ordenação estável
+
+	rows, err := r.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// 2. ESTRUTURAS DE APOIO:
+	// - O 'map' para evitar duplicar pedidos e agrupar itens rapidamente.
+	// - O 'slice' para manter a ordem original que veio do banco de dados.
+	pedidosMap := make(map[string]*domain.Pedido)
+	var pedidosOrdenados []*domain.Pedido
+
+	// 3. O LOOP DE PROCESSAMENTO
+	for rows.Next() {
+		var p domain.Pedido
+		var item domain.Item
+		// Usamos tipos que aceitam NULL para as colunas de 'pedido_itens',
+		// pois um pedido pode não ter itens.
+		var itemID sql.NullInt64
+		var itemProdutoID sql.NullString
+		var itemNome sql.NullString
+		var itemPreco sql.NullFloat64
+		var itemQuantidade sql.NullInt32
+
+		if err := rows.Scan(
+			&p.ID, &p.ClienteID, &p.Status, &p.Total, &p.CriadoEm, &p.AtualizadoEm,
+			&itemID, &itemProdutoID, &itemNome, &itemPreco, &itemQuantidade,
+		); err != nil {
+			return nil, err
+		}
+
+		// 4. LÓGICA DE AGRUPAMENTO
+		// Se o pedido ainda não está no nosso map...
+		if _, existe := pedidosMap[p.ID]; !existe {
+			// ...é um novo pedido. Inicializamos sua lista de itens...
+			p.Itens = []*domain.Item{}
+			// ...adicionamos ao map para encontrá-lo nas próximas linhas...
+			pedidosMap[p.ID] = &p
+			// ...e adicionamos ao slice para preservar a ordem.
+			pedidosOrdenados = append(pedidosOrdenados, &p)
+		}
+
+		// 5. ADIÇÃO DO ITEM
+		// Se esta linha contém um item válido (itemID não é NULL)...
+		if itemID.Valid {
+			// ...criamos o struct do item...
+			item.ID = string(itemID.Int64)
+			item.ProdutoID = itemProdutoID.String
+			item.Nome = itemNome.String
+			item.Preco = itemPreco.Float64
+			item.Quantidade = int(itemQuantidade.Int32)
+
+			// ...e o adicionamos à lista de itens do pedido correto (que buscamos no map).
+			pedidosMap[p.ID].Itens = append(pedidosMap[p.ID].Itens, &item)
+		}
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	// 6. RETORNO
+	return pedidosOrdenados, nil
 }

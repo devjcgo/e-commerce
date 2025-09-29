@@ -6,5 +6,6 @@ import "context"
 type PedidoRepository interface {
 	Save(ctx context.Context, pedido *Pedido) error
 	FindByID(ctx context.Context, id string) (*Pedido, error)
+	ListAll(ctx context.Context) ([]*Pedido, error)
 	// Outros métodos de consulta, como FindAll, etc.
 }
