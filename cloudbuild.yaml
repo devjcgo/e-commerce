@@ -5,20 +5,17 @@ steps:
     args:
       - 'build'
       - '-t'
-      # ESTA LINHA É O ENDEREÇO COMPLETO DA SUA IMAGEM DENTRO DO ARTIFACT REGISTRY.
-      # Veja como ela é formada: REGION-docker.pkg.dev/PROJECT_ID/NOME_DO_REPO/NOME_DA_IMAGEM:TAG
-      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/pedidos-service:$COMMIT_SHA'
       - '--build-arg=SERVICE_PATH=services/pedidos'
       - '--build-arg=MAIN_FILE_PATH=services/pedidos/cmd/api'
       - '.'
 
   # --- PASSO 2: Enviar a Imagem para o Artifact Registry ---
-  # O comando 'push' envia a imagem construída para o endereço que definimos acima.
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Pedidos Service'
-    args: ['push', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA']
+    args: ['push', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/pedidos-service:$COMMIT_SHA']
 
-  # --- PASSO 3: Fazer o Deploy da Imagem que está no Artifact Registry para o Cloud Run ---
+  # --- PASSO 3: Fazer o Deploy da Nova Imagem no Cloud Run ---
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Pedidos Service'
     entrypoint: gcloud
@@ -26,11 +23,17 @@ steps:
       - 'run'
       - 'deploy'
       - 'pedidos-service'
-      # O Cloud Run busca a imagem exatamente neste endereço do Artifact Registry.
-      - '--image=southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA'
+      - '--image=southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/pedidos-service:$COMMIT_SHA'
       - '--region=southamerica-east1'
       - '--platform=managed'
       - '--allow-unauthenticated'
 
+# A seção 'images' registra as imagens construídas.
 images:
-  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA'
+  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/pedidos-service:$COMMIT_SHA'
+
+# --- NOVA SEÇÃO ADICIONADA ---
+# Aqui especificamos o comportamento de logging do build.
+options:
+  logging: GCS_ONLY
+  logsBucket: 'gs://logs-bucket-essential-storm-466722-j2'
