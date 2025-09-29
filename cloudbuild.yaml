@@ -35,5 +35,4 @@ images:
 # --- NOVA SEÇÃO ADICIONADA ---
 # Aqui especificamos o comportamento de logging do build.
 options:
-  logging: GCS_ONLY
-  logsBucket: 'gs://logs-bucket-essential-storm-466722-j2'
+  logGcsBucket: 'logs-bucket-essential-storm-466722-j2'
