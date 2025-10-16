@@ -24,7 +24,7 @@ steps:
       - '--platform=managed'
       - '--allow-unauthenticated'
       - '--service-account=p-builder@${PROJECT_ID}.iam.gserviceaccount.com'
-      - '--set-secrets=DATABASE_URL=PEDIDOS_DB_DSN:latest'
+      - '--set-secrets=DATABASE_URL=pedidos_dsn:latest'
 
   # --- NOVOS PASSOS PARA O SERVIÇO DE CLIENTES ---
   - name: 'gcr.io/cloud-builders/docker'
@@ -51,7 +51,7 @@ steps:
       - '--platform=managed'
       - '--allow-unauthenticated'
       - '--service-account=p-builder@${PROJECT_ID}.iam.gserviceaccount.com'
-      - '--set-secrets=DATABASE_URL=PEDIDOS_DB_DSN:latest' # <-- Reutiliza o mesmo segredo do banco de dados
+      - '--set-secrets=DATABASE_URL=clientes_dsn:latest'
 
 # Registra ambas as imagens construídas
 images:
