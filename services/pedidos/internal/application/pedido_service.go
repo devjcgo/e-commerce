@@ -2,7 +2,7 @@ package application
 
 import (
 	"context"
-	"ecommerce/pedidos/internal/domain" // Verifique se o import está correto
+	"ecommerce/pedidos/internal/domain"
 )
 
 // PedidoService é a implementação dos nossos casos de uso de pedido.

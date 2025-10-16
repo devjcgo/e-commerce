@@ -48,7 +48,7 @@ func main() {
 	// --- ROTA DO SWAGGER ADICIONADA ---
 	r.Get("/swagger/*", httpSwagger.Handler())
 
-	port := os.Getenv("PORT_CLIENTES")
+	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8081"
 	}

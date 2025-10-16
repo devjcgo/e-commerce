@@ -5,11 +5,11 @@ consumers:
 
 keyauth_credentials:
   - consumer: meu-primeiro-app
-    key: a1d6e0a0-08ee-4502-a3f9-92b18f5c4728 # Sua chave customizada
+    key: a1d6e0a0-08ee-4502-a3f9-92b18f5c4728
 
 services:
   - name: pedidos-service
-    url: https://pedidos-service-1080308569078.southamerica-east1.run.app # <-- SUBSTITUA PELA SUA URL REAL
+    url: https://pedidos-service-1080308569078.southamerica-east1.run.app
     routes:
       # Rota protegida para a API de pedidos
       - name: pedidos-api-route
