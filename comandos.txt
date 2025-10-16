@@ -1,8 +1,17 @@
 De dentro de services/pedidos:
     Atualiza swagger
-        swag init -g cmd/api/main.go
+        swag init --parseDependency --parseInternal -g ./cmd/api/main.go
 
 
 De dentro de services/pedidos:
     executa aplicação
         go run ./cmd/api/main.go
+
+No Gcp Cloud Shell, redeploy do kong:
+    gcloud run deploy kong-gateway \
+  --image=kong:latest \
+  --region=southamerica-east1 \
+  --platform=managed \
+  --allow-unauthenticated \
+  --set-secrets=/etc/kong/kong.yaml=kong-config-v1:latest \
+  --set-env-vars="KONG_DATABASE=off,KONG_DECLARATIVE_CONFIG=/etc/kong/kong.yaml,KONG_PROXY_LISTEN=0.0.0.0:8080,KONG_ADMIN_LISTEN=off"

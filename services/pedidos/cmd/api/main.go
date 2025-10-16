@@ -2,8 +2,8 @@ package main
 
 import (
 	"ecommerce/pedidos/internal/application"
-	httphandler "ecommerce/pedidos/internal/infrastructure/http"
-	"ecommerce/pedidos/internal/infrastructure/repository"
+	httphandler "ecommerce/pedidos/internal/infra/http"
+	"ecommerce/pedidos/internal/infra/repository"
 	"ecommerce/pkg/db"
 	"fmt"
 	"log"

@@ -1,19 +1,17 @@
 steps:
-  # ... (passos de build e push continuam iguais)
+  # --- PASSOS PARA O SERVIÇO DE PEDIDOS (sem alterações) ---
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Pedidos Service'
     args:
       - 'build'
       - '-t'
-      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/pedidos-service:$COMMIT_SHA'
       - '--build-arg=SERVICE_PATH=services/pedidos'
       - '--build-arg=MAIN_FILE_PATH=services/pedidos/cmd/api'
       - '.'
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Pedidos Service'
-    args: ['push', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA']
-
-  # --- PASSO DE DEPLOY ATUALIZADO ---
+    args: ['push', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/pedidos-service:$COMMIT_SHA']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Pedidos Service'
     entrypoint: gcloud
@@ -21,18 +19,44 @@ steps:
       - 'run'
       - 'deploy'
       - 'pedidos-service'
-      - '--image=southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA'
+      - '--image=southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/pedidos-service:$COMMIT_SHA'
       - '--region=southamerica-east1'
       - '--platform=managed'
       - '--allow-unauthenticated'
       - '--service-account=p-builder@${PROJECT_ID}.iam.gserviceaccount.com'
-      # --- LINHA ADICIONADA ---
-      # Esta linha diz ao Cloud Run para pegar o segredo 'PEDIDOS_DB_DSN' (versão mais recente)
-      # e injetá-lo como a variável de ambiente 'DATABASE_URL'.
-      - '--set-secrets=DATABASE_URL=pedidos_dsn:latest'
+      - '--set-secrets=DATABASE_URL=PEDIDOS_DB_DSN:latest'
 
+  # --- NOVOS PASSOS PARA O SERVIÇO DE CLIENTES ---
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build Clientes Service'
+    args:
+      - 'build'
+      - '-t'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/clientes-service:$COMMIT_SHA'
+      - '--build-arg=SERVICE_PATH=services/clientes' # <-- Aponta para a pasta do novo serviço
+      - '--build-arg=MAIN_FILE_PATH=services/clientes/cmd/api' # <-- Aponta para o main do novo serviço
+      - '.'
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push Clientes Service'
+    args: ['push', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/clientes-service:$COMMIT_SHA']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy Clientes Service'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'clientes-service' # <-- Nome do novo serviço no Cloud Run
+      - '--image=southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/clientes-service:$COMMIT_SHA'
+      - '--region=southamerica-east1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--service-account=p-builder@${PROJECT_ID}.iam.gserviceaccount.com'
+      - '--set-secrets=DATABASE_URL=PEDIDOS_DB_DSN:latest' # <-- Reutiliza o mesmo segredo do banco de dados
+
+# Registra ambas as imagens construídas
 images:
-  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce/pedidos-service:$COMMIT_SHA'
+  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/pedidos-service:$COMMIT_SHA'
+  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/e-commerce-repo/clientes-service:$COMMIT_SHA'
 
 options:
   logging: CLOUD_LOGGING_ONLY

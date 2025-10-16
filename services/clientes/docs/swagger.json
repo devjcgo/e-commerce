@@ -1,0 +1,164 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/clientes": {
+            "get": {
+                "description": "Retorna uma lista de todos os clientes cadastrados com seus endereços.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clientes"
+                ],
+                "summary": "Lista todos os clientes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Cliente"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno ao listar clientes",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Cria um novo cliente com seus dados e endereços.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clientes"
+                ],
+                "summary": "Cria um novo cliente",
+                "parameters": [
+                    {
+                        "description": "Dados para criação do cliente",
+                        "name": "cliente",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/application.ClienteInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Cliente"
+                        }
+                    },
+                    "400": {
+                        "description": "Corpo da requisição inválido",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno ao criar cliente",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "application.ClienteInput": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "enderecos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/application.EnderecoInput"
+                    }
+                },
+                "nome": {
+                    "type": "string"
+                }
+            }
+        },
+        "application.EnderecoInput": {
+            "type": "object",
+            "properties": {
+                "cep": {
+                    "type": "string"
+                },
+                "cidade": {
+                    "type": "string"
+                },
+                "estado": {
+                    "type": "string"
+                },
+                "rua": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Cliente": {
+            "type": "object",
+            "properties": {
+                "alteradoEm": {
+                    "type": "string"
+                },
+                "criadoEm": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "enderecos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Endereco"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "nome": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Endereco": {
+            "type": "object",
+            "properties": {
+                "cep": {
+                    "type": "string"
+                },
+                "cidade": {
+                    "type": "string"
+                },
+                "estado": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "rua": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

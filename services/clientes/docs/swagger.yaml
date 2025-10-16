@@ -1,0 +1,106 @@
+definitions:
+  application.ClienteInput:
+    properties:
+      email:
+        type: string
+      enderecos:
+        items:
+          $ref: '#/definitions/application.EnderecoInput'
+        type: array
+      nome:
+        type: string
+    type: object
+  application.EnderecoInput:
+    properties:
+      cep:
+        type: string
+      cidade:
+        type: string
+      estado:
+        type: string
+      rua:
+        type: string
+    type: object
+  domain.Cliente:
+    properties:
+      alteradoEm:
+        type: string
+      criadoEm:
+        type: string
+      email:
+        type: string
+      enderecos:
+        items:
+          $ref: '#/definitions/domain.Endereco'
+        type: array
+      id:
+        type: string
+      nome:
+        type: string
+    type: object
+  domain.Endereco:
+    properties:
+      cep:
+        type: string
+      cidade:
+        type: string
+      estado:
+        type: string
+      id:
+        format: int64
+        type: integer
+      rua:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /clientes:
+    get:
+      description: Retorna uma lista de todos os clientes cadastrados com seus endereços.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Cliente'
+            type: array
+        "500":
+          description: Erro interno ao listar clientes
+          schema:
+            type: string
+      summary: Lista todos os clientes
+      tags:
+      - clientes
+    post:
+      consumes:
+      - application/json
+      description: Cria um novo cliente com seus dados e endereços.
+      parameters:
+      - description: Dados para criação do cliente
+        in: body
+        name: cliente
+        required: true
+        schema:
+          $ref: '#/definitions/application.ClienteInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Cliente'
+        "400":
+          description: Corpo da requisição inválido
+          schema:
+            type: string
+        "500":
+          description: Erro interno ao criar cliente
+          schema:
+            type: string
+      summary: Cria um novo cliente
+      tags:
+      - clientes
+swagger: "2.0"
