@@ -3,6 +3,7 @@ package http
 import (
 	"database/sql"
 	"ecommerce/pedidos/internal/application" // Verifique o import
+	_ "ecommerce/pedidos/internal/domain"
 	"encoding/json"
 	"errors"
 	"net/http"

@@ -1,8 +1,12 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Microsserviço responsável pelo gerenciamento de clientes.",
+        "title": "API de Clientes do E-commerce",
+        "contact": {},
+        "version": "1.0"
     },
+    "basePath": "/clientes",
     "paths": {
         "/clientes": {
             "get": {
@@ -20,7 +24,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Cliente"
+                                "$ref": "#/definitions/ecommerce_clientes_internal_domain.Cliente"
                             }
                         }
                     },
@@ -51,7 +55,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/application.ClienteInput"
+                            "$ref": "#/definitions/ecommerce_clientes_internal_application.ClienteInput"
                         }
                     }
                 ],
@@ -59,7 +63,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/domain.Cliente"
+                            "$ref": "#/definitions/ecommerce_clientes_internal_domain.Cliente"
                         }
                     },
                     "400": {
@@ -79,7 +83,7 @@
         }
     },
     "definitions": {
-        "application.ClienteInput": {
+        "ecommerce_clientes_internal_application.ClienteInput": {
             "type": "object",
             "properties": {
                 "email": {
@@ -88,7 +92,7 @@
                 "enderecos": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/application.EnderecoInput"
+                        "$ref": "#/definitions/ecommerce_clientes_internal_application.EnderecoInput"
                     }
                 },
                 "nome": {
@@ -96,7 +100,7 @@
                 }
             }
         },
-        "application.EnderecoInput": {
+        "ecommerce_clientes_internal_application.EnderecoInput": {
             "type": "object",
             "properties": {
                 "cep": {
@@ -113,7 +117,7 @@
                 }
             }
         },
-        "domain.Cliente": {
+        "ecommerce_clientes_internal_domain.Cliente": {
             "type": "object",
             "properties": {
                 "alteradoEm": {
@@ -128,7 +132,7 @@
                 "enderecos": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.Endereco"
+                        "$ref": "#/definitions/ecommerce_clientes_internal_domain.Endereco"
                     }
                 },
                 "id": {
@@ -139,7 +143,7 @@
                 }
             }
         },
-        "domain.Endereco": {
+        "ecommerce_clientes_internal_domain.Endereco": {
             "type": "object",
             "properties": {
                 "cep": {

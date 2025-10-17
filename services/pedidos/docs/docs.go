@@ -31,7 +31,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Pedido"
+                                "$ref": "#/definitions/ecommerce_pedidos_internal_domain.Pedido"
                             }
                         }
                     },
@@ -68,7 +68,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.createRequestBody"
+                            "$ref": "#/definitions/internal_infra_http.createRequestBody"
                         }
                     }
                 ],
@@ -114,7 +114,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Pedido"
+                            "$ref": "#/definitions/ecommerce_pedidos_internal_domain.Pedido"
                         }
                     },
                     "400": {
@@ -140,7 +140,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "application.ItensInput": {
+        "ecommerce_pedidos_internal_application.ItensInput": {
             "type": "object",
             "properties": {
                 "nome": {
@@ -157,7 +157,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Item": {
+        "ecommerce_pedidos_internal_domain.Item": {
             "type": "object",
             "properties": {
                 "id": {
@@ -178,7 +178,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Pedido": {
+        "ecommerce_pedidos_internal_domain.Pedido": {
             "type": "object",
             "properties": {
                 "atualizadoEm": {
@@ -196,11 +196,11 @@ const docTemplate = `{
                 "itens": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.Item"
+                        "$ref": "#/definitions/ecommerce_pedidos_internal_domain.Item"
                     }
                 },
                 "status": {
-                    "$ref": "#/definitions/domain.Status"
+                    "$ref": "#/definitions/ecommerce_pedidos_internal_domain.Status"
                 },
                 "total": {
                     "type": "number",
@@ -208,7 +208,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Status": {
+        "ecommerce_pedidos_internal_domain.Status": {
             "type": "string",
             "enum": [
                 "aguardando_pagamento",
@@ -223,7 +223,7 @@ const docTemplate = `{
                 "StatusCancelado"
             ]
         },
-        "http.createRequestBody": {
+        "internal_infra_http.createRequestBody": {
             "type": "object",
             "properties": {
                 "cliente_id": {
@@ -232,7 +232,7 @@ const docTemplate = `{
                 "itens": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/application.ItensInput"
+                        "$ref": "#/definitions/ecommerce_pedidos_internal_application.ItensInput"
                     }
                 }
             }
@@ -244,7 +244,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/",
+	BasePath:         "/pedidos",
 	Schemes:          []string{},
 	Title:            "API de Pedidos do E-commerce",
 	Description:      "Este é o microsserviço responsável pelo gerenciamento de pedidos.",

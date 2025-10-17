@@ -1,16 +1,17 @@
+basePath: /clientes
 definitions:
-  application.ClienteInput:
+  ecommerce_clientes_internal_application.ClienteInput:
     properties:
       email:
         type: string
       enderecos:
         items:
-          $ref: '#/definitions/application.EnderecoInput'
+          $ref: '#/definitions/ecommerce_clientes_internal_application.EnderecoInput'
         type: array
       nome:
         type: string
     type: object
-  application.EnderecoInput:
+  ecommerce_clientes_internal_application.EnderecoInput:
     properties:
       cep:
         type: string
@@ -21,7 +22,7 @@ definitions:
       rua:
         type: string
     type: object
-  domain.Cliente:
+  ecommerce_clientes_internal_domain.Cliente:
     properties:
       alteradoEm:
         type: string
@@ -31,14 +32,14 @@ definitions:
         type: string
       enderecos:
         items:
-          $ref: '#/definitions/domain.Endereco'
+          $ref: '#/definitions/ecommerce_clientes_internal_domain.Endereco'
         type: array
       id:
         type: string
       nome:
         type: string
     type: object
-  domain.Endereco:
+  ecommerce_clientes_internal_domain.Endereco:
     properties:
       cep:
         type: string
@@ -54,6 +55,9 @@ definitions:
     type: object
 info:
   contact: {}
+  description: Microsserviço responsável pelo gerenciamento de clientes.
+  title: API de Clientes do E-commerce
+  version: "1.0"
 paths:
   /clientes:
     get:
@@ -65,7 +69,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/domain.Cliente'
+              $ref: '#/definitions/ecommerce_clientes_internal_domain.Cliente'
             type: array
         "500":
           description: Erro interno ao listar clientes
@@ -84,14 +88,14 @@ paths:
         name: cliente
         required: true
         schema:
-          $ref: '#/definitions/application.ClienteInput'
+          $ref: '#/definitions/ecommerce_clientes_internal_application.ClienteInput'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/domain.Cliente'
+            $ref: '#/definitions/ecommerce_clientes_internal_domain.Cliente'
         "400":
           description: Corpo da requisição inválido
           schema:

@@ -2,6 +2,7 @@ package http
 
 import (
 	"ecommerce/clientes/internal/application"
+	_ "ecommerce/clientes/internal/domain"
 	"encoding/json"
 	"net/http"
 )

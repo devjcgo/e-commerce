@@ -1,6 +1,6 @@
-basePath: /
+basePath: /pedidos
 definitions:
-  application.ItensInput:
+  ecommerce_pedidos_internal_application.ItensInput:
     properties:
       nome:
         type: string
@@ -11,7 +11,7 @@ definitions:
       quantidade:
         type: integer
     type: object
-  domain.Item:
+  ecommerce_pedidos_internal_domain.Item:
     properties:
       id:
         type: string
@@ -25,7 +25,7 @@ definitions:
       quantidade:
         type: integer
     type: object
-  domain.Pedido:
+  ecommerce_pedidos_internal_domain.Pedido:
     properties:
       atualizadoEm:
         type: string
@@ -37,15 +37,15 @@ definitions:
         type: string
       itens:
         items:
-          $ref: '#/definitions/domain.Item'
+          $ref: '#/definitions/ecommerce_pedidos_internal_domain.Item'
         type: array
       status:
-        $ref: '#/definitions/domain.Status'
+        $ref: '#/definitions/ecommerce_pedidos_internal_domain.Status'
       total:
         format: float64
         type: number
     type: object
-  domain.Status:
+  ecommerce_pedidos_internal_domain.Status:
     enum:
     - aguardando_pagamento
     - pago
@@ -57,13 +57,13 @@ definitions:
     - StatusPago
     - StatusEnviado
     - StatusCancelado
-  http.createRequestBody:
+  internal_infra_http.createRequestBody:
     properties:
       cliente_id:
         type: string
       itens:
         items:
-          $ref: '#/definitions/application.ItensInput'
+          $ref: '#/definitions/ecommerce_pedidos_internal_application.ItensInput'
         type: array
     type: object
 info:
@@ -82,7 +82,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/domain.Pedido'
+              $ref: '#/definitions/ecommerce_pedidos_internal_domain.Pedido'
             type: array
         "404":
           description: Sem pedidos na base
@@ -105,7 +105,7 @@ paths:
         name: pedido
         required: true
         schema:
-          $ref: '#/definitions/http.createRequestBody'
+          $ref: '#/definitions/internal_infra_http.createRequestBody'
       produces:
       - application/json
       responses:
@@ -137,7 +137,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Pedido'
+            $ref: '#/definitions/ecommerce_pedidos_internal_domain.Pedido'
         "400":
           description: O ID do pedido é obrigatório
           schema:

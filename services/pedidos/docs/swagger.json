@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "basePath": "/",
+    "basePath": "/pedidos",
     "paths": {
         "/pedidos": {
             "get": {
@@ -24,7 +24,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Pedido"
+                                "$ref": "#/definitions/ecommerce_pedidos_internal_domain.Pedido"
                             }
                         }
                     },
@@ -61,7 +61,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.createRequestBody"
+                            "$ref": "#/definitions/internal_infra_http.createRequestBody"
                         }
                     }
                 ],
@@ -107,7 +107,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Pedido"
+                            "$ref": "#/definitions/ecommerce_pedidos_internal_domain.Pedido"
                         }
                     },
                     "400": {
@@ -133,7 +133,7 @@
         }
     },
     "definitions": {
-        "application.ItensInput": {
+        "ecommerce_pedidos_internal_application.ItensInput": {
             "type": "object",
             "properties": {
                 "nome": {
@@ -150,7 +150,7 @@
                 }
             }
         },
-        "domain.Item": {
+        "ecommerce_pedidos_internal_domain.Item": {
             "type": "object",
             "properties": {
                 "id": {
@@ -171,7 +171,7 @@
                 }
             }
         },
-        "domain.Pedido": {
+        "ecommerce_pedidos_internal_domain.Pedido": {
             "type": "object",
             "properties": {
                 "atualizadoEm": {
@@ -189,11 +189,11 @@
                 "itens": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.Item"
+                        "$ref": "#/definitions/ecommerce_pedidos_internal_domain.Item"
                     }
                 },
                 "status": {
-                    "$ref": "#/definitions/domain.Status"
+                    "$ref": "#/definitions/ecommerce_pedidos_internal_domain.Status"
                 },
                 "total": {
                     "type": "number",
@@ -201,7 +201,7 @@
                 }
             }
         },
-        "domain.Status": {
+        "ecommerce_pedidos_internal_domain.Status": {
             "type": "string",
             "enum": [
                 "aguardando_pagamento",
@@ -216,7 +216,7 @@
                 "StatusCancelado"
             ]
         },
-        "http.createRequestBody": {
+        "internal_infra_http.createRequestBody": {
             "type": "object",
             "properties": {
                 "cliente_id": {
@@ -225,7 +225,7 @@
                 "itens": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/application.ItensInput"
+                        "$ref": "#/definitions/ecommerce_pedidos_internal_application.ItensInput"
                     }
                 }
             }

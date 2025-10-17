@@ -31,7 +31,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Cliente"
+                                "$ref": "#/definitions/ecommerce_clientes_internal_domain.Cliente"
                             }
                         }
                     },
@@ -62,7 +62,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/application.ClienteInput"
+                            "$ref": "#/definitions/ecommerce_clientes_internal_application.ClienteInput"
                         }
                     }
                 ],
@@ -70,7 +70,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/domain.Cliente"
+                            "$ref": "#/definitions/ecommerce_clientes_internal_domain.Cliente"
                         }
                     },
                     "400": {
@@ -90,7 +90,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "application.ClienteInput": {
+        "ecommerce_clientes_internal_application.ClienteInput": {
             "type": "object",
             "properties": {
                 "email": {
@@ -99,7 +99,7 @@ const docTemplate = `{
                 "enderecos": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/application.EnderecoInput"
+                        "$ref": "#/definitions/ecommerce_clientes_internal_application.EnderecoInput"
                     }
                 },
                 "nome": {
@@ -107,7 +107,7 @@ const docTemplate = `{
                 }
             }
         },
-        "application.EnderecoInput": {
+        "ecommerce_clientes_internal_application.EnderecoInput": {
             "type": "object",
             "properties": {
                 "cep": {
@@ -124,7 +124,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Cliente": {
+        "ecommerce_clientes_internal_domain.Cliente": {
             "type": "object",
             "properties": {
                 "alteradoEm": {
@@ -139,7 +139,7 @@ const docTemplate = `{
                 "enderecos": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.Endereco"
+                        "$ref": "#/definitions/ecommerce_clientes_internal_domain.Endereco"
                     }
                 },
                 "id": {
@@ -150,7 +150,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Endereco": {
+        "ecommerce_clientes_internal_domain.Endereco": {
             "type": "object",
             "properties": {
                 "cep": {
@@ -177,8 +177,8 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "", // Deixe o Host vazio para funcionar localmente e no deploy
-	BasePath:         "/",
+	Host:             "",
+	BasePath:         "/clientes",
 	Schemes:          []string{},
 	Title:            "API de Clientes do E-commerce",
 	Description:      "Microsserviço responsável pelo gerenciamento de clientes.",
