@@ -15,12 +15,15 @@ services:
       - name: pedidos-api-route
         paths:
           - /pedidos
-        strip_path: false
+        strip_path: true
         plugins:
           - name: key-auth
 
       # Rota aberta para a documentação do Swagger
       - name: pedidos-swagger-route
+        url: https://pedidos-service-1080308569078.southamerica-east1.run.app
         paths:
           - /swagger
-        strip_path: false
+        strip_path: true
+        plugins:
+          - name: key-auth

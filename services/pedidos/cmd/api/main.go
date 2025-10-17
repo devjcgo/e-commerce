@@ -21,7 +21,7 @@ import (
 // @title API de Pedidos do E-commerce
 // @version 1.0
 // @description Este é o microsserviço responsável pelo gerenciamento de pedidos.
-// @BasePath /
+// @BasePath /pedidos
 func main() {
 	// --- CARREGA O ARQUIVO .ENV (APENAS PARA AMBIENTE LOCAL) ---
 	err := godotenv.Load()

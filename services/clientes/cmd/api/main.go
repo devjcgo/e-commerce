@@ -21,7 +21,7 @@ import (
 // @title API de Clientes do E-commerce
 // @version 1.0
 // @description Microsserviço responsável pelo gerenciamento de clientes.
-// @BasePath /
+// @BasePath /clientes
 func main() {
 	err := godotenv.Load()
 	if err != nil {
