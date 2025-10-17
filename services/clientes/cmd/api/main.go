@@ -23,6 +23,7 @@ import (
 // @description Microsserviço responsável pelo gerenciamento de clientes.
 // @BasePath /clientes
 func main() {
+	//
 	err := godotenv.Load()
 	if err != nil {
 		log.Println("Aviso: Erro ao carregar arquivo .env")
