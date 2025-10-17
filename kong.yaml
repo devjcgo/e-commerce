@@ -8,22 +8,22 @@ keyauth_credentials:
     key: a1d6e0a0-08ee-4502-a3f9-92b18f5c4728
 
 services:
+  # --- SERVIÇO DE PEDIDOS ---
   - name: pedidos-service
     url: https://pedidos-service-1080308569078.southamerica-east1.run.app
     routes:
-      # Rota protegida para a API de pedidos
-      - name: pedidos-api-route
+      - name: pedidos-route
         paths:
           - /pedidos
-        strip_path: true
         plugins:
           - name: key-auth
 
-      # Rota aberta para a documentação do Swagger
-      - name: pedidos-swagger-route
-        url: https://pedidos-service-1080308569078.southamerica-east1.run.app
+  # --- SERVIÇO DE CLIENTES ---
+  - name: clientes-service
+    url: https://clientes-service-1080308569078.southamerica-east1.run.app
+    routes:
+      - name: clientes-route
         paths:
-          - /swagger
-        strip_path: true
+          - /clientes
         plugins:
           - name: key-auth
